@@ -90,12 +90,13 @@ class _GamePageState extends State<GamePage> {
       width: MediaQuery.of(context).size.height / 2,
       margin: const EdgeInsets.all(8),
       child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3),
-          itemCount: 9,
-          itemBuilder: (context, int index) {
-            return _box(index);
-          }),
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemCount: 9,
+        itemBuilder: (context, int index) {
+          return _box(index);
+        },
+      ),
     );
   }
 
@@ -110,6 +111,7 @@ class _GamePageState extends State<GamePage> {
 
         setState(() {
           occupied[index] = currentPlayer;
+          print('$currentPlayer');
           changeTurn();
           checkForWinner();
           checkForDraw();
@@ -200,9 +202,6 @@ Define winning positions
       String playerPosition0 = occupied[winningPos[0]];
       String playerPosition1 = occupied[winningPos[1]];
       String playerPosition2 = occupied[winningPos[2]];
-      print(playerPosition0);
-      print(playerPosition1);
-      print(playerPosition2);
 
       if (playerPosition0.isNotEmpty) {
         if (playerPosition0 == playerPosition1 &&
@@ -216,18 +215,25 @@ Define winning positions
     }
   }
 
-  checkForDraw() {
+  void checkForDraw() {
+    // If the game has already ended, do nothing
     if (gameEnd) {
       return;
     }
+
+    // Assume the game is a draw unless proven otherwise
     bool draw = true;
+
+    // Iterate through each cell in the board
     for (var occupiedPlayer in occupied) {
+      // If any cell is empty, the game is not a draw
       if (occupiedPlayer.isEmpty) {
-        //at least one is empty not all are filled
         draw = false;
+        break;
       }
     }
 
+    // If all cells are filled and no empty cell is found, declare a draw
     if (draw) {
       showGameOverMessage("Draw");
       gameEnd = true;
@@ -237,7 +243,20 @@ Define winning positions
   showGameOverMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Colors.red,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
+        ),
+        backgroundColor: () {
+          if (message.contains("X")) {
+            return Colors.blue;
+          } else if (message.contains("O")) {
+            return Colors.orange;
+          } else {
+            return Colors.red;
+          }
+        }(),
         content: Text(
           "Game Over \n $message",
           textAlign: TextAlign.center,
