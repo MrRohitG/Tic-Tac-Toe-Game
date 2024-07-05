@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -116,7 +117,7 @@ class _GamePageState extends State<GamePage> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(209, 244, 67, 54)),
+          border: Border.all(color: Colors.grey),
           color: () {
             if (occupied[index].isEmpty) {
               return Colors.white; // Reddish color for empty occupied slot
@@ -174,8 +175,16 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  /*
+Define winning positions
+ 0 | 1 | 2
+-----------
+ 3 | 4 | 5
+-----------
+ 6 | 7 | 8
+
+  */
   checkForWinner() {
-    //Define winning positions
     List<List<int>> winningList = [
       [0, 1, 2],
       [3, 4, 5],
@@ -191,6 +200,9 @@ class _GamePageState extends State<GamePage> {
       String playerPosition0 = occupied[winningPos[0]];
       String playerPosition1 = occupied[winningPos[1]];
       String playerPosition2 = occupied[winningPos[2]];
+      print(playerPosition0);
+      print(playerPosition1);
+      print(playerPosition2);
 
       if (playerPosition0.isNotEmpty) {
         if (playerPosition0 == playerPosition1 &&
@@ -232,7 +244,7 @@ class _GamePageState extends State<GamePage> {
           style: GoogleFonts.poppins(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
-        ),
+      ),
     );
   }
 }
